@@ -1,0 +1,31 @@
+{
+  "food": [
+    "fruits",
+    "vegetables",
+    "bakery",
+    "meat",
+    "liquid",
+    "juice"
+  ],
+  "transport": [
+    "car ride",
+    "car wash",
+    "car insurance",
+    "wheel changes",
+    "car MOT"
+  ],
+  "education": [
+    "udemy",
+    "yt subscription",
+    "online classes",
+    "tutoring"
+  ],
+  "entertainment": [
+    "birthday",
+    "gifts",
+    "cinema",
+    "party",
+    "outing",
+    "eataway"
+  ]
+}

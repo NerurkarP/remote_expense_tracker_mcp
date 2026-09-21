@@ -1,0 +1,90 @@
+import sqlite3
+from sre_parse import CATEGORIES
+from fastmcp import FastMCP
+import os
+
+DB_PATH = os.path.join(os.path.dirname(__file__),"expense.db")
+CATEGORIES_PATH = os.path.join(os.path.dirname(__file__),"categories.json")
+
+mcp = FastMCP("Expense Tracker")
+
+def db_init():
+    with sqlite3.connect(DB_PATH) as c:
+        c.execute(
+            '''CREATE TABLE IF NOT EXISTS expenses(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                date TEXT NOT NULL,
+                amount REAL NOT NULL,
+                category TEXT NOT NULL,
+                subcategory TEXT DEFAULT " ",
+                note TEXT DEFAULT " "
+                )'''
+            )
+        
+db_init()
+
+@mcp.tool()
+def add_expense(date, amount, category, subcategory="", note=""):
+    ''' Add a new expense to the tracker '''
+    with sqlite3.connect(DB_PATH) as c:
+        cur = c.execute(
+            "INSERT INTO expenses (date, amount, category, subcategory, note) values (?,?,?,?,?)" ,
+            (date, amount, category, subcategory, note)
+        )
+        return {"status" : "ok", "id" : cur.lastrowid}
+
+@mcp.tool()
+def list_all_expense():
+    ''' Get the details of all the expense'''
+    with sqlite3.connect(DB_PATH) as c:
+        cur = c.execute(
+            ''' SELECT id, date, amount, category, subcategory, note from expenses 
+            order by id asc
+            '''
+        )
+        cols = [d[0] for d in cur.description] 
+        return [dict(zip(cols, r)) for r in cur.fetchall()]   
+
+@mcp.tool()
+def list_expense_from(start_date, end_date):
+    ''' Get the details of all the expense'''
+    with sqlite3.connect(DB_PATH) as c:
+        cur = c.execute(
+            ''' SELECT id, date, amount, category, subcategory, note from expenses 
+            BETWEEN ? AND ? 
+            ORDER BY id ASC
+            ''', (start_date, end_date)
+        )
+        cols = [d[0] for d in cur.description] 
+        return [dict(zip(cols, r)) for r in cur.fetchall()]   
+
+@mcp.resource("expense://categories", mime_type="application/json")
+def categories():
+    with open(CATEGORIES_PATH, r, encoding="utf-8") as f:
+        return f.read()
+    
+
+if __name__ =="__main__":
+    mcp.run()
+    
+
+
+
+
+# import random
+# from fastmcp import FastMCP
+
+# mcp = FastMCP("Demo Server")
+
+# @mcp.tool()
+# def roll_dice(n_dice: int = 1) -> list[int]:
+#     "Roll n_dice 6 sided dice  and return the result"
+#     return [random.randint(1,6) for _ in range(n_dice)]
+
+# @mcp.tool()
+# def add_numbers(a: float, b: float) -> float:
+#     "Add 2 numbers together"
+#     return a+b
+
+# if __name__ == "__main__":
+#     mcp.run()

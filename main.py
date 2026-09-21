@@ -60,7 +60,7 @@ def list_expense_from(start_date, end_date):
 
 @mcp.resource("expense://categories", mime_type="application/json")
 def categories():
-    with open(CATEGORIES_PATH, r, encoding="utf-8") as f:
+    with open(CATEGORIES_PATH, "r", encoding="utf-8") as f:
         return f.read()
     
 

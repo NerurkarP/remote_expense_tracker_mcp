@@ -5,7 +5,8 @@
     "bakery",
     "meat",
     "liquid",
-    "juice"
+    "juice",
+    "alcohol"
   ],
   "transport": [
     "car ride",
@@ -27,5 +28,13 @@
     "party",
     "outing",
     "eataway"
+  ],
+  "utilities": [
+    "mobile recharge",
+    "tv cable",
+    "wifi",
+    "water",
+    "electricity",
+    "gas"
   ]
 }
